@@ -10,12 +10,13 @@ import SocialLogin from "../SocialLogin/SocialLogin";
 import { Form } from "react-bootstrap";
 import { async } from "@firebase/util";
 import Loadding from "../../Shared/Loadding/Loadding";
+import useToken from "../../../hooks/useToken";
 const Register = () => {
   const [agree, setAgree] = useState(false);
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
   const [updateProfile, updating, updateError] = useUpdateProfile(auth);
-
+const [token]=useToken(user);
   const navigate = useNavigate();
   if (loading ) {
     return <Loadding></Loadding>;
@@ -23,8 +24,8 @@ const Register = () => {
   const handleneagtive = () => {
     navigate(`/register`);
   };
-  if (user) {
-    console.log(user);
+  if (token) {
+    navigate("/home");
   }
   const handleFrom = async (event) => {
     event.preventDefault();
@@ -35,7 +36,7 @@ const Register = () => {
 
     await createUserWithEmailAndPassword(email, password);
     await updateProfile({ displayName: name });
-    navigate("/home");
+    
   };
   return (
     <div className="register-from">

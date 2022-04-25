@@ -13,7 +13,7 @@ const Order = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const getOrder = async () => {
-      const email = user.email;
+      const email = user?.email;
       const url = `https://agile-crag-49954.herokuapp.com/order?email=${email}`;
       try {
         const { data } = await AxiosPrivet.get(url, {});
@@ -29,8 +29,14 @@ const Order = () => {
     getOrder();
   }, [user]);
   return (
-    <div>
+    <div className="w-50 mx-auto">
       <h1>Order {orders.length}</h1>
+
+      {
+        orders.map(order=><div key={order._id}>
+            <p> {order.email}: {order.service}</p>
+        </div>)
+      }
     </div>
   );
 };

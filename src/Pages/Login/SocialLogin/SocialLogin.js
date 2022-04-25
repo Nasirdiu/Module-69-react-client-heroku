@@ -9,13 +9,16 @@ import {
 import auth from "../../../firebace.init";
 import { useLocation, useNavigate } from "react-router-dom";
 import Loadding from "../../Shared/Loadding/Loadding";
+import useToken from "../../../hooks/useToken";
+
 const SocialLogin = () => {
   const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
   const [signInWithGithub, user1, loading1, error1] = useSignInWithGithub(auth);
+  const [token] = useToken(user || user1);
   const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
-  if (user || user1) {
+  if (token) {
     navigate(from, { replace: true });
   }
 

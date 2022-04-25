@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PageTitle from "../Shared/PageTitle/PageTitle";
 import axios from "axios";
+import useToken from "../../hooks/useToken";
 
 const Login = () => {
   const emailRef = useRef("");
@@ -21,26 +22,22 @@ const Login = () => {
   const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
   const navigate = useNavigate();
 
+  const [token] = useToken(user);
+
   let errorElement;
   if (error) {
     errorElement = <p className="text-danger">Error: {error?.message}</p>;
   }
+
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
-
   const handleFrom = async (event) => {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     await signInWithEmailAndPassword(email, password);
-
-    const { data } = await axios.post(
-      "https://agile-crag-49954.herokuapp.com/login",
-      { email }
-    );
-    localStorage.setItem("assessToken", data.assessToken);
-    navigate(from, { replace: true });
   };
+
   const handleneagtive = () => {
     navigate(`/register`);
   };
@@ -56,6 +53,10 @@ const Login = () => {
   };
   if (loading) {
     return <Loadding></Loadding>;
+  }
+
+  if (token) {
+    navigate(from, { replace: true });
   }
   return (
     <div className="container w-50 mx-auto">
